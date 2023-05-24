@@ -6,9 +6,6 @@ test:
 clean:
  	go mod tidy
 
-lint:
-	golangci-lint run .
-
 dev: build
 	docker run $(IMAGETAG)
 
