@@ -15,5 +15,8 @@ build:
 install:
 	go get -v ./...
 
-all: 
-	install test
+all:
+	@echo :: Tidying the go.mod file
+	make mod-tidy
+	@echo :: Testing
+	make test
