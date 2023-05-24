@@ -15,4 +15,5 @@ build:
 install:
 	go get -v ./...
 
-all: install test
+all: 
+	install test
