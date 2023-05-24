@@ -1,22 +1,30 @@
-IMAGETAG=onboarding-cknightonpullin
-
+# TEST
 test:
-	go test
+	go test .
 
-clean:
- 	go mod tidy
+# GO MOD
+mod-tidy:
+	go mod tidy
 
-dev: build
-	docker run $(IMAGETAG)
+# LINT
+install-linter: ## install go linters.
+	@ [ -e ./bin/golangci-lint ] || wget -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s latest
 
-build:
-	docker build . -t $(IMAGETAG)
+lint:
+	golangci-lint run
 
-install:
-	go get -v ./...
+# DOCKER
+build-docker:
+	docker build -t oonboarding-cknightonpullin .
 
+run-docker: ## runs docker image on port 8080 in detached mode.
+	docker run -d -p 8080:8080 --name onboarding onboarding-cknightonpullin
+
+# ALL
 all:
 	@echo :: Tidying the go.mod file
 	make mod-tidy
+	@echo :: Linting
+	make lint
 	@echo :: Testing
 	make test
