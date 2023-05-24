@@ -15,7 +15,7 @@ lint:
 
 # DOCKER
 build-docker:
-	docker build -t oonboarding-cknightonpullin .
+	docker build -t onboarding-cknightonpullin .
 
 run-docker: ## runs docker image on port 8080 in detached mode.
 	docker run -d -p 8080:8080 --name onboarding onboarding-cknightonpullin
