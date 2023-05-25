@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// test for timeStamp()
+// test for timeStamp() 
 func Test_TimeStamp(t *testing.T) {
 	result := timeStamp()[0:9]
 	expect := time.Now().String()[0:9]
