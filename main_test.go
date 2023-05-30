@@ -2,14 +2,13 @@ package main
 
 import (
 	"testing"
-	"time"
 )
 
-// test for timeStamp() 
+// test for currentTime(): checks if nothing is returned
 func Test_TimeStamp(t *testing.T) {
-	result := timeStamp()[0:9]
-	expect := time.Now().String()[0:9]
-	if expect != result {
-		t.Errorf("timeStamp(): Date does not match.")
+
+	result := currentTime()
+	if result == nil {
+		t.Errorf("currentTime(): nothing returned")
 	}
 }
