@@ -2,15 +2,15 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var (
-	//counter for metrics
 	counter = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "requests_count",
 		Help: "A counter of the number of total requests received",
@@ -18,26 +18,43 @@ var (
 )
 
 func main() {
-	app := fiber.New()
 
-	//send timestamp
-	app.Get("/", func(c *fiber.Ctx) error {
-		err := c.SendString(timeStamp())
+	log.Print("Listening on 8080...")
 
-		if err != nil {
-			log.Fatal(err)
-		}
+	mux := http.NewServeMux()
+	//timestamp
+	mux.HandleFunc("/", writeTime)
+	//metrics
+	go metricsServer()
 
-		//increment metric counter
-		counter.Inc()
+	err := http.ListenAndServe(":8080", mux)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		return nil
-	})
-
-	log.Fatal(app.Listen(":8080"))
 }
 
-// return timestamp - test written for this
-func timeStamp() string {
-	return time.Now().String()
+// metrics server run as go routine
+func metricsServer() {
+	http.Handle("/__/metrics", promhttp.Handler())
+	err := http.ListenAndServe(":8081", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func writeTime(writer http.ResponseWriter, request *http.Request) {
+
+	//time in []byte format
+	_, err := writer.Write(currentTime())
+	if err != nil {
+		log.Print(err)
+	}
+	//increment counter
+	counter.Inc()
+}
+
+// Test returning time as it's own func
+func currentTime() []byte {
+	return []byte(time.Now().String())
 }
