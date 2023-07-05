@@ -1,4 +1,4 @@
-module Work/Code/onboarding-cknightonpullin
+module github.com/utilitywarehouse/onboarding-cknightonpullin
 
 go 1.20
 
